@@ -240,3 +240,5 @@ If you'd like the site to be harder to accidentally find, you can name the repos
 ---
 
 Made with plain HTML, CSS, and JavaScript — no frameworks required. Happy editing, and happy birthday to whoever this is for. ♡
+
+Birthday website 💗
