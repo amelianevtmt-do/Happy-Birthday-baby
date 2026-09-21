@@ -326,9 +326,9 @@ document.addEventListener("DOMContentLoaded", () => {
     btn.className = "gallery-item";
     btn.type = "button";
     btn.innerHTML = `
-      <img class="gallery-photo" src="${memory.image}" alt="${memory.caption}" loading="lazy" />
-      <span class="gallery-caption">${memory.caption}</span>
-    `;
+  <img class="gallery-photo" src="${memory.image}" alt="${memory.caption}" />
+  <span class="gallery-caption">${memory.caption}</span>
+`;
     btn.addEventListener("click", () => {
       lightboxImage.src = memory.image;
       lightboxImage.alt = memory.caption;
