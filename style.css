@@ -1,0 +1,842 @@
+/* =====================================================================
+   BIRTHDAY SURPRISE — STYLESHEET
+   -----------------------------------------------------------------
+   This file is organized top to bottom in the order things appear
+   on the page:
+     1. Design tokens (colors, fonts, spacing) — edit colors here
+     2. Reset & base styles
+     3. Buttons
+     4. Particle field (floating hearts/sparkles)
+     5. Landing screen
+     6. Reveal screen
+     7. Timeline section
+     8. Gallery section
+     9. Reasons (envelope cards) section
+     10. Quiz section
+     11. Letter / secret message section
+     12. Final surprise section
+     13. Modals (timeline popup + lightbox)
+     14. Music control
+     15. Responsive rules
+     16. Reduced motion / accessibility
+   ===================================================================== */
+
+/* ---------------------------------------------------------------------
+   1. DESIGN TOKENS
+   If you only want to change the color scheme, edit the values below.
+--------------------------------------------------------------------- */
+:root {
+  /* Core palette */
+  --ivory: #fbf5ef;          /* main background */
+  --ivory-deep: #f3e9df;     /* secondary panel background */
+  --blush: #f3cfd6;          /* soft pink accent */
+  --blush-light: #fbe4e8;    /* very light pink, used for cards */
+  --berry: #a6435c;          /* primary accent — buttons, headings */
+  --berry-deep: #7d2f45;     /* darker berry, used for hover states */
+  --plum: #4a2f3e;           /* main text color */
+  --plum-soft: #7a5c6b;      /* secondary/muted text */
+  --gold: #d9a85e;           /* sparkle / detail accent */
+  --lavender: #cdbede;       /* subtle lavender accent */
+  --white: #ffffff;
+
+  /* Typography */
+  --font-display: "Fraunces", Georgia, "Times New Roman", serif;
+  --font-body: "Work Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+
+  /* Spacing scale */
+  --space-xs: 0.5rem;
+  --space-sm: 1rem;
+  --space-md: 1.75rem;
+  --space-lg: 3rem;
+  --space-xl: 5rem;
+
+  /* Shape */
+  --radius-sm: 10px;
+  --radius-md: 18px;
+  --radius-lg: 28px;
+
+  /* Shadow */
+  --shadow-soft: 0 12px 30px rgba(74, 47, 62, 0.12);
+  --shadow-lift: 0 18px 40px rgba(74, 47, 62, 0.18);
+
+  /* Motion */
+  --ease-soft: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* ---------------------------------------------------------------------
+   2. RESET & BASE STYLES
+--------------------------------------------------------------------- */
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background: var(--ivory);
+  color: var(--plum);
+  font-family: var(--font-body);
+  font-weight: 400;
+  line-height: 1.6;
+  overflow-x: hidden; /* prevents any horizontal scroll on mobile */
+}
+
+h1, h2, h3 {
+  font-family: var(--font-display);
+  font-weight: 500;
+  line-height: 1.15;
+  margin: 0;
+  color: var(--berry-deep);
+}
+
+p {
+  margin: 0;
+  max-width: 62ch;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+button {
+  font-family: var(--font-body);
+  cursor: pointer;
+}
+
+/* Visible keyboard focus everywhere */
+a:focus-visible,
+button:focus-visible {
+  outline: 3px solid var(--gold);
+  outline-offset: 3px;
+}
+
+.screen {
+  position: relative;
+  width: 100%;
+  padding: var(--space-xl) var(--space-md);
+}
+
+.section-block {
+  max-width: 900px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.section-title {
+  font-size: clamp(1.8rem, 4vw, 2.6rem);
+  margin-bottom: var(--space-xs);
+}
+
+.section-subtitle {
+  color: var(--plum-soft);
+  font-size: 1.05rem;
+  margin: 0 auto var(--space-lg);
+}
+
+/* Fade-in-on-scroll sections (JS adds/removes .is-visible) */
+.fade-section {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.8s var(--ease-soft), transform 0.8s var(--ease-soft);
+}
+
+.fade-section.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ---------------------------------------------------------------------
+   3. BUTTONS
+--------------------------------------------------------------------- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  border: none;
+  border-radius: 999px;
+  padding: 0.9rem 2rem;
+  font-size: 1rem;
+  font-weight: 500;
+  min-height: 48px; /* comfortably tappable on mobile */
+  transition: transform 0.25s var(--ease-soft), box-shadow 0.25s var(--ease-soft), background 0.25s var(--ease-soft);
+}
+
+.btn-primary {
+  background: var(--berry);
+  color: var(--white);
+  box-shadow: var(--shadow-soft);
+}
+
+.btn-primary:hover,
+.btn-primary:focus-visible {
+  background: var(--berry-deep);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lift);
+}
+
+.btn-ghost {
+  background: transparent;
+  color: var(--berry-deep);
+  border: 1.5px solid var(--berry);
+  margin-top: var(--space-sm);
+}
+
+.btn-ghost:hover,
+.btn-ghost:focus-visible {
+  background: var(--blush-light);
+  transform: translateY(-2px);
+}
+
+/* ---------------------------------------------------------------------
+   4. PARTICLE FIELD (floating hearts / sparkles)
+--------------------------------------------------------------------- */
+.particle-field {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 1;
+}
+
+.particle {
+  position: absolute;
+  bottom: -10%;
+  opacity: 0.75;
+  animation-name: float-up;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  will-change: transform;
+}
+
+@keyframes float-up {
+  0% {
+    transform: translateY(0) translateX(0) rotate(0deg);
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.8;
+  }
+  90% {
+    opacity: 0.6;
+  }
+  100% {
+    transform: translateY(-110vh) translateX(var(--drift, 20px)) rotate(20deg);
+    opacity: 0;
+  }
+}
+
+/* ---------------------------------------------------------------------
+   5. LANDING SCREEN
+--------------------------------------------------------------------- */
+.landing-screen {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  background: radial-gradient(circle at 50% 20%, var(--blush-light) 0%, var(--ivory) 65%);
+  z-index: 2;
+  transition: opacity 0.6s var(--ease-soft), transform 0.6s var(--ease-soft);
+}
+
+.landing-screen.is-leaving {
+  opacity: 0;
+  transform: scale(1.03);
+  pointer-events: none;
+}
+
+.landing-content {
+  max-width: 520px;
+  padding: var(--space-md);
+}
+
+.landing-eyebrow {
+  font-family: var(--font-display);
+  font-style: italic;
+  color: var(--plum-soft);
+  margin-bottom: var(--space-sm);
+  font-size: 1.1rem;
+}
+
+.landing-line {
+  font-size: clamp(1.6rem, 5vw, 2.4rem);
+  margin-bottom: var(--space-lg);
+}
+
+/* ---------------------------------------------------------------------
+   6. REVEAL SCREEN
+--------------------------------------------------------------------- */
+.reveal-screen {
+  min-height: 90vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.reveal-content {
+  max-width: 640px;
+}
+
+.reveal-title {
+  font-size: clamp(2.2rem, 6vw, 3.4rem);
+  margin-bottom: var(--space-md);
+}
+
+.name-highlight {
+  color: var(--berry);
+  font-style: italic;
+}
+
+.reveal-message {
+  font-size: 1.15rem;
+  color: var(--plum-soft);
+  margin: 0 auto var(--space-lg);
+  white-space: pre-line; /* respects line breaks typed in script.js */
+}
+
+/* ---------------------------------------------------------------------
+   7. TIMELINE
+--------------------------------------------------------------------- */
+.timeline-list {
+  list-style: none;
+  margin: 0 auto var(--space-lg);
+  padding: 0;
+  max-width: 560px;
+  text-align: left;
+  border-left: 2px solid var(--blush);
+}
+
+.timeline-item {
+  position: relative;
+  padding: 0 0 var(--space-md) var(--space-md);
+}
+
+.timeline-item::before {
+  content: "";
+  position: absolute;
+  left: -7px;
+  top: 6px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--berry);
+  border: 2px solid var(--ivory);
+}
+
+.timeline-btn {
+  background: none;
+  border: none;
+  text-align: left;
+  padding: 0;
+  width: 100%;
+  min-height: 44px;
+}
+
+.timeline-label {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  color: var(--plum);
+  transition: color 0.2s var(--ease-soft);
+}
+
+.timeline-btn:hover .timeline-label,
+.timeline-btn:focus-visible .timeline-label {
+  color: var(--berry);
+}
+
+.timeline-hint {
+  display: block;
+  font-size: 0.9rem;
+  color: var(--plum-soft);
+  margin-top: 0.2rem;
+}
+
+/* ---------------------------------------------------------------------
+   8. GALLERY
+--------------------------------------------------------------------- */
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: var(--space-md);
+  margin-bottom: var(--space-lg);
+}
+
+.gallery-item {
+  background: var(--white);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  box-shadow: var(--shadow-soft);
+  cursor: pointer;
+  border: none;
+  padding: 0;
+  transition: transform 0.3s var(--ease-soft), box-shadow 0.3s var(--ease-soft);
+}
+
+.gallery-item:hover,
+.gallery-item:focus-visible {
+  transform: translateY(-6px) rotate(-0.5deg);
+  box-shadow: var(--shadow-lift);
+}
+
+.gallery-photo {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  background: var(--ivory-deep); /* shows as a soft placeholder if the image is missing */
+}
+
+.gallery-caption {
+  padding: var(--space-sm);
+  font-size: 0.95rem;
+  color: var(--plum-soft);
+  text-align: left;
+}
+
+/* ---------------------------------------------------------------------
+   9. REASONS (ENVELOPE CARDS)
+--------------------------------------------------------------------- */
+.reasons-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: var(--space-md);
+  margin-bottom: var(--space-lg);
+}
+
+.reason-card {
+  position: relative;
+  background: var(--blush-light);
+  border-radius: var(--radius-md);
+  padding: var(--space-md) var(--space-sm);
+  min-height: 140px;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  color: var(--berry-deep);
+  box-shadow: var(--shadow-soft);
+  transition: transform 0.3s var(--ease-soft);
+}
+
+.reason-card:hover,
+.reason-card:focus-visible {
+  transform: translateY(-4px);
+}
+
+.reason-card .reason-front,
+.reason-card .reason-back {
+  transition: opacity 0.3s var(--ease-soft);
+}
+
+.reason-card .reason-back {
+  display: none;
+  font-family: var(--font-body);
+  font-size: 1rem;
+  color: var(--plum);
+}
+
+.reason-card.is-open .reason-front {
+  display: none;
+}
+
+.reason-card.is-open .reason-back {
+  display: block;
+}
+
+.reason-card.is-open {
+  background: var(--white);
+}
+
+/* ---------------------------------------------------------------------
+   10. QUIZ
+--------------------------------------------------------------------- */
+.quiz-container {
+  max-width: 560px;
+  margin: 0 auto var(--space-lg);
+  background: var(--white);
+  border-radius: var(--radius-lg);
+  padding: var(--space-lg) var(--space-md);
+  box-shadow: var(--shadow-soft);
+  text-align: left;
+}
+
+.quiz-progress {
+  font-size: 0.85rem;
+  color: var(--plum-soft);
+  margin-bottom: var(--space-xs);
+}
+
+.quiz-question {
+  font-family: var(--font-display);
+  font-size: 1.4rem;
+  margin-bottom: var(--space-md);
+  color: var(--plum);
+}
+
+.quiz-choices {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  margin-bottom: var(--space-sm);
+}
+
+.quiz-choice {
+  text-align: left;
+  background: var(--ivory);
+  border: 1.5px solid transparent;
+  border-radius: var(--radius-sm);
+  padding: 0.85rem 1rem;
+  min-height: 48px;
+  font-size: 1rem;
+  color: var(--plum);
+  transition: border-color 0.2s var(--ease-soft), background 0.2s var(--ease-soft);
+}
+
+.quiz-choice:hover,
+.quiz-choice:focus-visible {
+  border-color: var(--blush);
+}
+
+.quiz-choice.correct {
+  background: var(--blush-light);
+  border-color: var(--berry);
+}
+
+.quiz-choice.incorrect {
+  border-color: var(--lavender);
+  opacity: 0.7;
+}
+
+.quiz-feedback {
+  font-size: 0.98rem;
+  color: var(--berry-deep);
+  min-height: 1.4em;
+}
+
+.quiz-next-btn {
+  margin-top: var(--space-sm);
+}
+
+.quiz-result {
+  text-align: center;
+}
+
+.quiz-result-score {
+  font-family: var(--font-display);
+  font-size: 1.6rem;
+  color: var(--berry);
+  margin-bottom: var(--space-xs);
+}
+
+/* ---------------------------------------------------------------------
+   11. LETTER / SECRET MESSAGE
+--------------------------------------------------------------------- */
+.letter-screen {
+  min-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  background: linear-gradient(180deg, var(--ivory) 0%, var(--blush-light) 100%);
+}
+
+.letter-intro-text {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  margin-bottom: var(--space-md);
+  color: var(--plum);
+}
+
+.envelope {
+  width: min(90vw, 420px);
+  margin: var(--space-md) auto;
+}
+
+.envelope-back {
+  position: relative;
+  background: var(--berry);
+  border-radius: var(--radius-sm);
+  padding: var(--space-md);
+  min-height: 220px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  overflow: hidden;
+  box-shadow: var(--shadow-soft);
+}
+
+.envelope-flap {
+  position: absolute;
+  top: -1px;
+  left: 0;
+  width: 100%;
+  height: 90px;
+  background: var(--berry-deep);
+  clip-path: polygon(0 0, 50% 100%, 100% 0);
+  transform-origin: top center;
+  transition: transform 0.7s var(--ease-soft);
+  pointer-events: none;
+}
+
+.envelope.is-open .envelope-flap {
+  transform: rotateX(180deg);
+}
+
+.letter-paper {
+  background: var(--white);
+  border-radius: var(--radius-sm) var(--radius-sm) 4px 4px;
+  padding: var(--space-lg) var(--space-md) var(--space-md);
+  width: 100%;
+  text-align: left;
+  box-shadow: 0 4px 14px rgba(74, 47, 62, 0.15);
+  transform: translateY(30px);
+  opacity: 0;
+  transition: transform 0.6s 0.35s var(--ease-soft), opacity 0.6s 0.35s var(--ease-soft);
+}
+
+.envelope.is-open .letter-paper {
+  transform: translateY(-18px);
+  opacity: 1;
+}
+
+.letter-greeting {
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  margin-bottom: var(--space-sm);
+  color: var(--berry-deep);
+}
+
+.letter-body {
+  color: var(--plum);
+  white-space: pre-line;
+  margin-bottom: var(--space-sm);
+}
+
+.letter-signoff {
+  font-family: var(--font-display);
+  font-style: italic;
+  color: var(--plum-soft);
+}
+
+/* ---------------------------------------------------------------------
+   12. FINAL SURPRISE
+--------------------------------------------------------------------- */
+.final-screen {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  background: var(--plum);
+  color: var(--ivory);
+  transition: background 0.6s var(--ease-soft);
+}
+
+.final-pretext {
+  font-family: var(--font-display);
+  font-size: 1.4rem;
+  margin-bottom: var(--space-md);
+  color: var(--blush-light);
+}
+
+.final-reveal {
+  max-width: 560px;
+}
+
+.final-message {
+  font-size: 1.2rem;
+  margin-bottom: var(--space-md);
+  color: var(--ivory);
+}
+
+.final-happy-birthday {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 6vw, 3rem);
+  color: var(--blush);
+}
+
+/* ---------------------------------------------------------------------
+   13. MODALS (timeline popup + lightbox)
+--------------------------------------------------------------------- */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(74, 47, 62, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-md);
+  z-index: 50;
+}
+
+/* Without this rule, the "hidden" attribute gets overridden by the
+   "display: flex" rule above, so the empty modal boxes stay visible
+   even when they're not supposed to be open yet. */
+.modal-overlay[hidden] {
+  display: none;
+}
+
+.modal-card {
+  background: var(--white);
+  border-radius: var(--radius-lg);
+  padding: var(--space-lg) var(--space-md) var(--space-md);
+  max-width: 480px;
+  width: 100%;
+  position: relative;
+  text-align: left;
+  box-shadow: var(--shadow-lift);
+}
+
+.modal-label {
+  font-size: 0.85rem;
+  text-transform: none;
+  color: var(--plum-soft);
+  margin-bottom: 0.3rem;
+}
+
+.modal-title {
+  font-size: 1.5rem;
+  margin-bottom: var(--space-sm);
+}
+
+.modal-text {
+  color: var(--plum);
+}
+
+.modal-close {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  background: var(--ivory);
+  border: none;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  font-size: 1rem;
+  color: var(--plum);
+}
+
+.lightbox-card {
+  position: relative;
+  max-width: 560px;
+  width: 100%;
+}
+
+.lightbox-image {
+  width: 100%;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-lift);
+}
+
+.lightbox-caption {
+  color: var(--white);
+  text-align: center;
+  margin-top: var(--space-sm);
+}
+
+.lightbox-card .modal-close {
+  top: -50px;
+  right: 0;
+  background: var(--white);
+}
+
+/* ---------------------------------------------------------------------
+   14. MUSIC CONTROL
+--------------------------------------------------------------------- */
+.music-control {
+  position: fixed;
+  bottom: var(--space-sm);
+  right: var(--space-sm);
+  z-index: 40;
+}
+
+.music-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--white);
+  border: 1.5px solid var(--blush);
+  border-radius: 999px;
+  padding: 0.6rem 1rem;
+  min-height: 44px;
+  box-shadow: var(--shadow-soft);
+  color: var(--berry-deep);
+  font-size: 0.9rem;
+  transition: transform 0.2s var(--ease-soft);
+}
+
+.music-btn:hover,
+.music-btn:focus-visible {
+  transform: translateY(-2px);
+}
+
+#music-icon {
+  font-size: 1.1rem;
+}
+
+.music-btn.is-playing #music-icon {
+  animation: pulse-note 1.4s ease-in-out infinite;
+}
+
+@keyframes pulse-note {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.25); }
+}
+
+/* ---------------------------------------------------------------------
+   15. RESPONSIVE RULES
+--------------------------------------------------------------------- */
+@media (max-width: 600px) {
+  .screen {
+    padding: var(--space-lg) var(--space-sm);
+  }
+
+  .timeline-list {
+    max-width: 100%;
+  }
+
+  .music-status {
+    display: none; /* icon-only button on small screens to save space */
+  }
+
+  .music-btn {
+    padding: 0.7rem;
+    border-radius: 50%;
+    width: 48px;
+    height: 48px;
+    justify-content: center;
+  }
+}
+
+/* ---------------------------------------------------------------------
+   16. REDUCED MOTION
+--------------------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  * {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+
+  .particle-field {
+    display: none; /* floating hearts/sparkles are purely decorative */
+  }
+
+  .fade-section {
+    opacity: 1;
+    transform: none;
+  }
+}

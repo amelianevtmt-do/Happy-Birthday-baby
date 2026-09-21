@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>A Little Something For You</title>
+  <meta name="description" content="A personal birthday surprise." />
+
+  <!-- Google Fonts: Fraunces (romantic, characterful serif for headings) + Work Sans (clean body text) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,500;0,600;1,500&family=Work+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- Floating background particles (hearts/sparkles) live here, injected by JS -->
+  <div id="particle-field" class="particle-field" aria-hidden="true"></div>
+
+  <!-- ============================= -->
+  <!-- 1. SECRET LANDING SCREEN -->
+  <!-- ============================= -->
+  <section id="landing-screen" class="screen landing-screen">
+    <div class="landing-content">
+      <p class="landing-eyebrow">Hi baby.</p>
+      <h1 class="landing-line">I have a lil surprise for you. hope you like it <span aria-hidden="true"></span></h1>
+      <button id="open-btn" class="btn btn-primary" type="button">
+        Open it
+      </button>
+    </div>
+  </section>
+
+  <!-- Everything below is hidden until "Open it" is clicked -->
+  <main id="main-content" class="main-content" hidden>
+
+    <!-- ============================= -->
+    <!-- 2. BIRTHDAY REVEAL -->
+    <!-- ============================= -->
+    <section id="reveal" class="screen reveal-screen fade-section">
+      <div class="reveal-content">
+        <h2 class="reveal-title">
+          Happy Birthday, <span id="name-slot" class="name-highlight">Love</span> <span aria-hidden="true">♡</span>
+        </h2>
+        <p id="reveal-message" class="reveal-message"><!-- filled by script.js --></p>
+        <button class="btn btn-ghost scroll-next" data-target="#timeline" type="button">
+          There's more...
+        </button>
+      </div>
+    </section>
+
+    <!-- ============================= -->
+    <!-- 3. OUR LITTLE TIMELINE -->
+    <!-- ============================= -->
+    <section id="timeline" class="screen section-block fade-section">
+      <h2 class="section-title">Our Little Timeline</h2>
+      <p class="section-subtitle">A few moments I keep coming back to. Tap one po.</p>
+
+      <ol id="timeline-list" class="timeline-list">
+        <!-- Timeline items are rendered here by script.js from the `timeline` array -->
+      </ol>
+
+      <button class="btn btn-ghost scroll-next" data-target="#gallery" type="button">Keep going</button>
+    </section>
+
+    <!-- Timeline popup card (hidden until an item is clicked) -->
+    <div id="timeline-modal" class="modal-overlay" hidden>
+      <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="timeline-modal-title">
+        <button class="modal-close" id="timeline-modal-close" type="button" aria-label="Close">✕</button>
+        <p id="timeline-modal-label" class="modal-label"></p>
+        <h3 id="timeline-modal-title" class="modal-title"></h3>
+        <p id="timeline-modal-text" class="modal-text"></p>
+      </div>
+    </div>
+
+    <!-- ============================= -->
+    <!-- 4. PHOTO / MEMORY GALLERY -->
+    <!-- ============================= -->
+    <section id="gallery" class="screen section-block fade-section">
+      <h2 class="section-title">Little Memories</h2>
+      <p class="section-subtitle">Some of my favorite moments with you. Click a photo to see it bigger, baby.</p>
+
+      <div id="gallery-grid" class="gallery-grid">
+        <!-- Gallery items are rendered here by script.js from the `memories` array -->
+      </div>
+
+      <button class="btn btn-ghost scroll-next" data-target="#reasons" type="button">There's still more</button>
+    </section>
+
+    <!-- Gallery lightbox (hidden until a photo is clicked) -->
+    <div id="lightbox" class="modal-overlay" hidden>
+      <div class="lightbox-card">
+        <button class="modal-close" id="lightbox-close" type="button" aria-label="Close">✕</button>
+        <img id="lightbox-image" class="lightbox-image" src="" alt="" />
+        <p id="lightbox-caption" class="lightbox-caption"></p>
+      </div>
+    </div>
+
+    <!-- ============================= -->
+    <!-- 5. REASONS WHY I LIKE YOU -->
+    <!-- ============================= -->
+    <section id="reasons" class="screen section-block fade-section">
+      <h2 class="section-title">Reasons Why I Like You</h2>
+      <p class="section-subtitle">Little envelopes. Open them whenever you want.</p>
+
+      <div id="reasons-grid" class="reasons-grid">
+        <!-- Envelope cards rendered here by script.js from the `reasons` array -->
+      </div>
+
+      <button class="btn btn-ghost scroll-next" data-target="#quiz" type="button">One more thing</button>
+    </section>
+
+    <!-- ============================= -->
+    <!-- 6. MINI INTERACTIVE GAME -->
+    <!-- ============================= -->
+    <section id="quiz" class="screen section-block fade-section">
+      <h2 class="section-title">Tell me what you wish for. </h2>
+      <p class="section-subtitle">Let's see if i can guess it.</p>
+
+      <div id="quiz-container" class="quiz-container">
+        <!-- Quiz question + choices rendered here by script.js from the `quizQuestions` array -->
+      </div>
+
+      <button class="btn btn-ghost scroll-next" data-target="#secret-message" type="button">Almost done...</button>
+    </section>
+
+    <!-- ============================= -->
+    <!-- 7. SECRET MESSAGE (LETTER) -->
+    <!-- ============================= -->
+    <section id="secret-message" class="screen letter-screen fade-section">
+      <div id="letter-intro" class="letter-intro">
+        <p class="letter-intro-text">I have one last thing to tell you...</p>
+        <button id="letter-open-btn" class="btn btn-primary" type="button">Open the letter</button>
+      </div>
+
+      <div id="envelope" class="envelope" hidden>
+        <div class="envelope-back">
+          <div class="letter-paper" id="letter-paper">
+            <p class="letter-greeting">Dear <span id="letter-name-slot">Love</span>,</p>
+            <p id="letter-body" class="letter-body"><!-- filled by script.js --></p>
+            <p class="letter-signoff">— Liane</p>
+          </div>
+        </div>
+        <div class="envelope-flap"></div>
+      </div>
+
+      <button class="btn btn-ghost scroll-next" data-target="#final" type="button" id="after-letter-btn" hidden>
+        There's one more surprise
+      </button>
+    </section>
+
+    <!-- ============================= -->
+    <!-- 8. FINAL SURPRISE -->
+    <!-- ============================= -->
+    <section id="final" class="screen final-screen fade-section">
+      <div id="final-intro" class="final-intro">
+        <p class="final-pretext">Before you go...</p>
+        <button id="final-btn" class="btn btn-primary" type="button">One last surprise ♡</button>
+      </div>
+
+      <div id="final-reveal" class="final-reveal" hidden>
+        <p id="final-message" class="final-message"><!-- filled by script.js --></p>
+        <p class="final-happy-birthday">Happy Birthday, <span id="final-name-slot">Love</span>.</p>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ============================= -->
+  <!-- MUSIC CONTROL (always visible once site is open) -->
+  <!-- ============================= -->
+  <div id="music-control" class="music-control" hidden>
+    <audio id="bgMusic" loop>
+      <source src="assets/music/aboutyou.mp3" type="audio/mpeg" />
+    </audio>
+    <button id="music-toggle" class="music-btn" type="button" aria-pressed="false">
+      <span id="music-icon" aria-hidden="true">♪</span>
+      <span id="music-status" class="music-status">Play music</span>
+    </button>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
