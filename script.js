@@ -58,51 +58,51 @@ const timeline = [
 // The "image" path must match the filename exactly (including .jpg/.png).
 const memories = [
   {
-    image: "assets/images/photo1.jpg",
+    image: "photo1.jpg",
     caption: "One of my favorite memories ♡"
   },
   {
-    image: "assets/images/photo2.jpg",
+    image: "photo2.jpg",
     caption: "This day was special."
   },
   { 
-    image: "assets/images/photo3.jpg",
+    image: "photo3.jpg",
     caption: "I still think about this one."
   },
   {
-    image: "assets/images/photo4.jpg",
+    image: "photo4.jpg",
     caption: "Our rb bonding."
   },
   {
-    image: "assets/images/photo5.jpg",
+    image: "photo5.jpg",
     caption: "This one too."
   },
   {
-    image: "assets/images/photo6.jpg",
+    image: "photo6.jpg",
     caption: "Your kabaliwan."
   },
   {
-    image: "assets/images/photo7.jpg",
+    image: "photo7.jpg",
     caption: "Our kulitan."
   },
   {
-    image: "assets/images/photo8.jpg",
+    image: "photo8.jpg",
     caption: "Our babies."
   },
   {
-    image: "assets/images/photo9.jpg",
+    image: "photo9.jpg",
     caption: "The things that i love."
   },
   {
-    image: "assets/images/photo10.jpg",
+    image: "photo10.jpg",
     caption: "The things that i love."
   },
    {
-    image: "assets/images/photo11.jpg",
+    image: "photo11.jpg",
     caption: "Your jealousy HAHAHHAHA."
   },
    {
-    image: "assets/images/photo12.jpg",
+    image: "photo12.jpg",
     caption: "Our ML bonding."
   }
 ];
