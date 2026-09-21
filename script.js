@@ -322,22 +322,34 @@ document.addEventListener("DOMContentLoaded", () => {
   const lightboxClose = document.getElementById("lightbox-close");
 
   memories.forEach((memory) => {
-    const btn = document.createElement("button");
-    btn.className = "gallery-item";
-    btn.type = "button";
-    btn.innerHTML = `
-  <img class="gallery-photo" src="${memory.image}" alt="${memory.caption}" />
-  <span class="gallery-caption">${memory.caption}</span>
-`;
-    btn.addEventListener("click", () => {
-      lightboxImage.src = memory.image;
-      lightboxImage.alt = memory.caption;
-      lightboxCaption.textContent = memory.caption;
-      lightbox.hidden = false;
-      lightboxClose.focus();
-    });
-    galleryGrid.appendChild(btn);
+  const btn = document.createElement("button");
+  btn.className = "gallery-item";
+  btn.type = "button";
+
+  const img = document.createElement("img");
+  img.className = "gallery-photo";
+  img.src = memory.image;
+  img.alt = memory.caption;
+  img.loading = "eager";
+  img.decoding = "auto";
+
+  const caption = document.createElement("span");
+  caption.className = "gallery-caption";
+  caption.textContent = memory.caption;
+
+  btn.appendChild(img);
+  btn.appendChild(caption);
+
+  btn.addEventListener("click", () => {
+    lightboxImage.src = memory.image;
+    lightboxImage.alt = memory.caption;
+    lightboxCaption.textContent = memory.caption;
+    lightbox.hidden = false;
+    lightboxClose.focus();
   });
+
+  galleryGrid.appendChild(btn);
+});
 
   lightboxClose.addEventListener("click", () => (lightbox.hidden = true));
   lightbox.addEventListener("click", (e) => {
