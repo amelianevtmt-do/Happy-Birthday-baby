@@ -807,7 +807,7 @@ button:focus-visible {
   }
 
   .music-status {
-    display: none; /* icon-only button on small screens to save space */
+    display: none;
   }
 
   .music-btn {
@@ -817,8 +817,13 @@ button:focus-visible {
     height: 48px;
     justify-content: center;
   }
-}
 
+  /* FIX: Make all sections visible on phones */
+  .fade-section {
+    opacity: 1;
+    transform: none;
+  }
+}
 /* ---------------------------------------------------------------------
    16. REDUCED MOTION
 --------------------------------------------------------------------- */
